@@ -14,20 +14,24 @@ CONFIG += warn_on
 
 
 SOURCES += \
-    main.cpp \
-    mainwindow.cpp \
-    libraryhelperwindow.cpp \
-    notetreeitem.cpp \
-    notetreewidget.cpp \
-    editor.cpp
+    src/main.cpp \
+    src/mainwindow.cpp \
+    src/library/libraryhelperwindow.cpp \
+    src/notetree/notetreeitem.cpp \
+    src/notetree/notetreewidget.cpp \
+    src/editor/editor.cpp \
+    src/editor/editorcolorscheme.cpp \
+    src/editor/editorlatexhighlighter.cpp
 
 HEADERS += \
-    mainwindow.hpp \
-    libraryhelperwindow.hpp \
-    notetreeitem.hpp \
-    notetreewidget.hpp \
-    editor.hpp
+    src/mainwindow.hpp \
+    src/library/libraryhelperwindow.hpp \
+    src/notetree/notetreeitem.hpp \
+    src/notetree/notetreewidget.hpp \
+    src/editor/editor.hpp \
+    src/editor/editorcolorscheme.hpp \
+    src/editor/editorlatexhighlighter.hpp
 
 FORMS += \
-    mainwindow.ui \
-    libraryhelperwindow.ui
+    src/mainwindow.ui \
+    src/library/libraryhelperwindow.ui

@@ -1,4 +1,4 @@
-#include "libraryhelperwindow.hpp"
+#include "src/library/libraryhelperwindow.hpp"
 
 #include <QtCore/QJsonDocument>
 

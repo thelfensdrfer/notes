@@ -306,7 +306,7 @@
   <customwidget>
    <class>NoteTreeWidget</class>
    <extends>QTreeWidget</extends>
-   <header>notetreewidget.hpp</header>
+   <header>src/notetree/notetreewidget.hpp</header>
   </customwidget>
  </customwidgets>
  <resources/>

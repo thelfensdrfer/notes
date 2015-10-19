@@ -1,8 +1,8 @@
 #ifndef MAINWINDOW_HPP
 #define MAINWINDOW_HPP
 
-#include "notetreeitem.hpp"
-#include "editor.hpp"
+#include "src/notetree/notetreeitem.hpp"
+#include "src/editor/editor.hpp"
 
 #include <QtCore/QJsonObject>
 #include <QtCore/QJsonArray>
@@ -89,6 +89,7 @@ private:
     QJsonObject _library;
     QString _path;
     QTimer _saveTimer;
+    QList<EditorColorScheme*> _colorSchemes;
 };
 
 #endif // MAINWINDOW_HPP

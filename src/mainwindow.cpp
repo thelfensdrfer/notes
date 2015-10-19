@@ -1,7 +1,8 @@
 #include "mainwindow.hpp"
 #include "ui_mainwindow.h"
 
-#include "editor.hpp"
+#include "editor/editor.hpp"
+#include "notetree/notetreewidget.hpp"
 
 #include <QtCore/QDebug>
 #include <QtCore/QJsonDocument>
@@ -55,7 +56,20 @@ MainWindow::MainWindow(QJsonObject library, QString path, QWidget *parent) :
             return;
         }
 
-        Editor *editor = new Editor(note);
+        Editor *editor = new Editor(note, this->_colorSchemes.at(0));
+
+        connect(editor, &Editor::dirtyChanged, [this, editor]() {
+            if (editor->isDirty())
+                this->_ui->editorTabWidget->setTabText(
+                            this->_ui->editorTabWidget->indexOf(editor),
+                            QString("%1 *").arg(editor->note()->text(NoteTreeItem::COLUMN_NAME))
+                );
+            else
+                this->_ui->editorTabWidget->setTabText(
+                            this->_ui->editorTabWidget->indexOf(editor),
+                            QString("%1").arg(editor->note()->text(NoteTreeItem::COLUMN_NAME))
+                );
+        });
 
         this->_ui->editorTabWidget->addTab(editor, note->text(NoteTreeItem::COLUMN_NAME));
         note->setOpenTab(editor);
@@ -140,6 +154,18 @@ MainWindow::MainWindow(QJsonObject library, QString path, QWidget *parent) :
         this->latexToHtml(editor);
     });
 
+    EditorColorScheme *monokaiDark = new EditorColorScheme(
+                QColor::fromRgb(36, 36, 36),
+                QColor::fromRgb(255, 255, 255),
+                QColor::fromRgb(60, 63, 65),
+                QColor::fromRgb(249, 37, 72),
+                QColor::fromRgb(118, 118, 118),
+                QColor::fromRgb(118, 118, 118),
+                QColor::fromRgb(166, 226, 46),
+                QColor::fromRgb(230, 219, 116)
+    );
+    this->_colorSchemes.append(monokaiDark);
+
     this->_saveTimer.setInterval(30 * 1000);
     this->_saveTimer.start();
 }
@@ -147,6 +173,11 @@ MainWindow::MainWindow(QJsonObject library, QString path, QWidget *parent) :
 MainWindow::~MainWindow()
 {
     delete this->_ui;
+
+    for (int i = 0; i < this->_colorSchemes.count(); i++) {
+        delete this->_colorSchemes.at(i);
+    }
+    this->_colorSchemes.clear();
 
     qDebug() << "Destroy instance";
 }

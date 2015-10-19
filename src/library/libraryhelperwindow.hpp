@@ -1,7 +1,7 @@
 #ifndef LIBRARYHELPERWINDOW_HPP
 #define LIBRARYHELPERWINDOW_HPP
 
-#include "mainwindow.hpp"
+#include "../mainwindow.hpp"
 
 #include <QtCore/QJsonDocument>
 
