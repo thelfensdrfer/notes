@@ -2,4 +2,10 @@
     <qresource prefix="/images">
         <file alias="icon.png">resources/icon.png</file>
     </qresource>
+    <qresource prefix="/fonts">
+        <file alias="opensans-bold.ttf">resources/opensans/OpenSans-Bold.ttf</file>
+        <file alias="opensans-regular.ttf">resources/opensans/OpenSans-Regular.ttf</file>
+        <file alias="sourcecodepro-bold.ttf">resources/source-code-pro/SourceCodePro-Bold.ttf</file>
+        <file alias="sourcecodepro-regular.ttf">resources/source-code-pro/SourceCodePro-Regular.ttf</file>
+    </qresource>
 </RCC>

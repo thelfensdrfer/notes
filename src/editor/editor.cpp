@@ -19,6 +19,7 @@ Editor::Editor(NoteTreeItem *note, EditorColorScheme *colorScheme, QWidget *pare
     this->setPlaceholderText(tr("Your notes"));
 
     this->setStyleSheet(QString("background-color: %1; color: %2;").arg(this->_colorScheme->background().name()).arg(this->_colorScheme->text().name()));
+    this->setFont(QFont("SourceCodePro"));
 
     // Line numbers widget
     this->_lineNumersWidget = new EditorLineNumbersWidget(this);
