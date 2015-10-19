@@ -4,6 +4,7 @@
 #include "../mainwindow.hpp"
 
 #include <QtCore/QJsonDocument>
+#include <QtCore/QJsonObject>
 
 #include <QtWidgets/QWidget>
 
@@ -25,9 +26,30 @@ public:
      */
     bool isValidLibrary();
 
+protected:
+    /**
+     * @brief Load a library and check if it's valid
+     * @param path
+     * @param ok
+     * @return
+     */
+    QJsonObject loadLibrary(QString path, bool *ok) const;
+
+    /**
+     * @brief Load recent libraries
+     */
+    void loadRecentLibraries();
+
+    /**
+     * @brief Append library to list of recent libraries
+     */
+    void addRecentLibrary(QString path);
+
 private:
     Ui::LibraryHelperWindow *_ui;
     MainWindow *_mainWindow;
+
+    QList<QString> _recentLibraries;
 
 signals:
     /**
