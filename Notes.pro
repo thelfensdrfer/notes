@@ -35,3 +35,6 @@ HEADERS += \
 FORMS += \
     src/mainwindow.ui \
     src/library/libraryhelperwindow.ui
+
+RESOURCES += \
+    resources.qrc

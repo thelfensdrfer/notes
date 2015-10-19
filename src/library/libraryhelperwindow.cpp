@@ -16,6 +16,9 @@ LibraryHelperWindow::LibraryHelperWindow(QWidget *parent) :
     qDebug() << "Create instance";
 
     this->_ui->setupUi(this);
+    this->setWindowFlags(Qt::Dialog | Qt::MSWindowsFixedSizeDialogHint);
+
+    this->_ui->titleLabel->setText(QString("%1 %2").arg(qApp->applicationName()).arg(qApp->applicationVersion()));
 
     connect(this->_ui->quitButton, &QPushButton::clicked, []() {
         qDebug() << "Quit application";
@@ -185,6 +188,7 @@ void LibraryHelperWindow::loadRecentLibraries()
 
         QTableWidgetItem *lastChanged = new QTableWidgetItem(fileInfo.lastModified().toString("yyyy-MM-dd HH:mm"));
         lastChanged->setData(Qt::UserRole, fileInfo.lastModified());
+        lastChanged->setTextAlignment(Qt::AlignRight | Qt::AlignVCenter);
         this->_ui->recentLibrariesTable->setItem(i, 1, lastChanged);
 
         this->_recentLibraries.append(path);
