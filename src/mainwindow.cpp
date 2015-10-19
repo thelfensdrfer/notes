@@ -128,9 +128,10 @@ MainWindow::MainWindow(QJsonObject library, QString path, QWidget *parent) :
             this->_ui->convertLogEdit->appendPlainText(QString("Converted latex to html."));
 
             QString texFilePath = this->_convertProcess->arguments().first();
-            QFile htmlFile(texFilePath.replace(".tex", ".html"));
+            QString htmlFilename = texFilePath.replace(".tex", ".html");
+            QFile htmlFile(htmlFilename);
             if (!htmlFile.exists()) {
-                qCritical("%s", QString("HTML file does not exist: %1!").arg(htmlFile.fileName()));
+                qCritical("%s", QString("HTML file does not exist: %1!").arg(htmlFilename).toUtf8().constData());
                 return;
             }
 
@@ -349,7 +350,7 @@ void MainWindow::latexToHtml(Editor *editor)
     // Create temp path
     QDir tempPath(QString("%1/%2").arg(QDir::tempPath()).arg("notes"));
     if (!tempPath.exists() && !tempPath.mkdir(tempPath.absolutePath())) {
-        qCritical("%s", QString("Temporary directory does not exists and could not be created: %1!").arg(tempPath.absolutePath()));
+        qCritical("%s", QString("Temporary directory does not exists and could not be created: %1!").arg(tempPath.absolutePath()).toUtf8().constData());
         return;
     }
 
@@ -373,7 +374,7 @@ void MainWindow::latexToHtml(Editor *editor)
     program = "htlatex.exe";
 #else
     qCritical("Unknown OS");
-    return "";
+    return;
 #endif
 
     this->_convertProcess->setProgram(program);
