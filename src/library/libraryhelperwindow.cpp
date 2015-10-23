@@ -17,8 +17,11 @@ LibraryHelperWindow::LibraryHelperWindow(QWidget *parent) :
 
     this->_ui->setupUi(this);
     this->setWindowFlags(Qt::Dialog | Qt::MSWindowsFixedSizeDialogHint);
+    this->setStyleSheet("LibraryHelperWindow { background-color: #fff; } #titleLabel { color: #222; } #recentLibrariesTable { selection-background-color: #222; selection-color: #fff; }");
 
     this->_ui->titleLabel->setText(QString("%1 %2").arg(qApp->applicationName()).arg(qApp->applicationVersion()));
+
+    this->_ui->recentLibrariesTable->setFocusPolicy(Qt::NoFocus);
 
     connect(this->_ui->quitButton, &QPushButton::clicked, []() {
         qDebug() << "Quit application";
