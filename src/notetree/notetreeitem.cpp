@@ -65,6 +65,11 @@ void NoteTreeItem::setContent(QString content)
     this->_content = content;
 }
 
+bool NoteTreeItem::isCategory()
+{
+    return (this->type() == NoteTreeItem::CategoryType);
+}
+
 void NoteTreeItem::setOpenTab(QWidget *editor)
 {
     this->_editor = editor;

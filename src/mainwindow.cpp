@@ -50,6 +50,9 @@ MainWindow::MainWindow(QJsonObject library, QString path, QWidget *parent) :
             return;
         }
 
+        if (note->isCategory())
+            return;
+
         // Check if tab is already open and switch to it
         if (note->openTab() != Q_NULLPTR) {
             this->_ui->editorTabWidget->setCurrentWidget(note->openTab());

@@ -39,6 +39,12 @@ public:
     void setContent(QString content);
 
     /**
+     * @brief Check if item is a category
+     * @return
+     */
+    bool isCategory();
+
+    /**
      * @brief Set the currently open tab
      * @param editor
      */
