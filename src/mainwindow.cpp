@@ -176,6 +176,8 @@ MainWindow::MainWindow(QJsonObject library, QString path, QWidget *parent) :
     this->_ui->splitter->setStretchFactor(1, 3);
     this->_ui->splitter->setStretchFactor(2, 2);
 
+    this->_ui->convertLogEdit->setFont(QFont("Source Code Pro"));
+
     this->_saveTimer.setInterval(30 * 1000);
     this->_saveTimer.start();
 }

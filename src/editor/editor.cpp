@@ -14,13 +14,6 @@ Editor::Editor(NoteTreeItem *note, EditorColorScheme *colorScheme, QWidget *pare
 {
     qDebug() << "Create instance" << note->text(NoteTreeItem::COLUMN_NAME);
 
-    // Setup editor
-    this->setPlainText(note->content());
-    this->setPlaceholderText(tr("Your notes"));
-
-    this->setStyleSheet(QString("background-color: %1; color: %2;").arg(this->_colorScheme->background().name()).arg(this->_colorScheme->text().name()));
-    this->setFont(QFont("SourceCodePro"));
-
     // Line numbers widget
     this->_lineNumersWidget = new EditorLineNumbersWidget(this);
 
@@ -33,6 +26,13 @@ Editor::Editor(NoteTreeItem *note, EditorColorScheme *colorScheme, QWidget *pare
 
     this->_updateLineNumberAreaWidth(0);
     this->_highlightCurrentLine();
+
+    // Setup editor
+    this->setPlainText(note->content());
+    this->setPlaceholderText(tr("Your notes"));
+
+    this->setStyleSheet(QString("background-color: %1; color: %2;").arg(this->_colorScheme->background().name()).arg(this->_colorScheme->text().name()));
+    this->setFont(QFont("Source Code Pro"));
 
     connect(this, &Editor::textChanged, [this]() {
         qDebug() << "Text changed";
