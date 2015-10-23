@@ -79,10 +79,14 @@ MainWindow::MainWindow(QJsonObject library, QString path, QWidget *parent) :
         this->_ui->menuPreview->setEnabled(true);
     });
 
-    connect(this->_ui->notesTree, &NoteTreeWidget::itemDropped, [this]() {
-        qDebug() << "Item dropped";
+    connect(this->_ui->notesTree, &NoteTreeWidget::saveTree, [this]() {
+        qDebug() << "Tree should be saved";
 
         this->saveTree();
+    });
+
+    connect(this->_ui->notesTree, &NoteTreeWidget::addTreeItem, [this](bool isCategory) {
+        this->addTreeItem(isCategory);
     });
 
     connect(this->_ui->editorTabWidget, &QTabWidget::tabCloseRequested, [this](int index) {
