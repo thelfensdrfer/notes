@@ -167,6 +167,15 @@ MainWindow::MainWindow(QJsonObject library, QString path, QWidget *parent) :
     );
     this->_colorSchemes.append(monokaiDark);
 
+    // Set splitter size
+    QList<int> splitterSizes;
+    splitterSizes << this->width() / 6 * 1 << this->width() / 6 * 3 << this->width() / 6 * 2;
+    this->_ui->splitter->setSizes(splitterSizes);
+
+    this->_ui->splitter->setStretchFactor(0, 1);
+    this->_ui->splitter->setStretchFactor(1, 3);
+    this->_ui->splitter->setStretchFactor(2, 2);
+
     this->_saveTimer.setInterval(30 * 1000);
     this->_saveTimer.start();
 }
