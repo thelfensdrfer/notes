@@ -36,6 +36,13 @@ protected:
     QJsonObject loadLibrary(QString path, bool *ok) const;
 
     /**
+     * @brief Create a new library file at path
+     * @param path
+     * @return
+     */
+    bool saveLibrary(QString path);
+
+    /**
      * @brief Load recent libraries
      */
     void loadRecentLibraries();

@@ -47,41 +47,22 @@ LibraryHelperWindow::LibraryHelperWindow(QWidget *parent) :
         qDebug() << "Creating new library";
 
         QString libraryFilename = QFileDialog::getSaveFileName(this, tr("Create library"), "My Library.lib", tr("Library Files (*.lib);;All Files (*.*)"));
-        QFile libraryFile(libraryFilename);
-        if (libraryFile.exists()) {
-            qCritical("%s", QString("File %1 already exists!").arg(libraryFilename).toUtf8().constData());
+        bool ok = this->saveLibrary(libraryFilename);
+        if (!ok)
             return;
-        }
 
-        if (!libraryFile.open(QIODevice::WriteOnly)) {
-            qCritical("%s", QString("File %1 could not be created: %2!").arg(libraryFilename).arg(libraryFile.errorString()).toUtf8().constData());
+        QJsonObject library = this->loadLibrary(libraryFilename, &ok);
+        if (!ok)
             return;
-        }
-
-        QFileInfo libraryFileInfo(libraryFilename);
-
-        QJsonDocument library;
-        QJsonObject root;
-        root.insert("name", libraryFileInfo.baseName());
-        root.insert("notes", QJsonArray());
-        library.setObject(root);
-
-        if (!libraryFile.write(library.toJson(), library.toJson().length())) {
-            qCritical("%s", QString("File %1 could not be written: %2!").arg(libraryFilename).arg(libraryFile.errorString()).toUtf8().constData());
-            libraryFile.close();
-            return;
-        }
-
-        libraryFile.close();
 
         qDebug() << "Successfully created library" << libraryFilename;
-        emit librarySelected(library.object(), libraryFilename);
+        emit librarySelected(library, libraryFilename);
     });
 
     connect(this->_ui->recentLibrariesTable, &QTableWidget::itemDoubleClicked, [this](QTableWidgetItem *item) {
         qDebug() << "Load recent library";
         if (this->_recentLibraries.count() <= item->row()) {
-            qWarning("%s", QString("Library does not exist anymore"));
+            qWarning("%s", QString("Library does not exist anymore").toUtf8().constData());
             return;
         }
 
@@ -149,6 +130,38 @@ QJsonObject LibraryHelperWindow::loadLibrary(QString path, bool *ok) const
 
     *ok = true;
     return library.object();
+}
+
+bool LibraryHelperWindow::saveLibrary(QString path)
+{
+    QFile libraryFile(path);
+    if (libraryFile.exists()) {
+        qCritical("%s", QString("File %1 already exists!").arg(path).toUtf8().constData());
+        return false;
+    }
+
+    if (!libraryFile.open(QIODevice::WriteOnly)) {
+        qCritical("%s", QString("File %1 could not be created: %2!").arg(path).arg(libraryFile.errorString()).toUtf8().constData());
+        return false;
+    }
+
+    QFileInfo libraryFileInfo(path);
+
+    QJsonDocument library;
+    QJsonObject root;
+    root.insert("name", libraryFileInfo.baseName());
+    root.insert("notes", QJsonArray());
+    library.setObject(root);
+
+    if (!libraryFile.write(library.toJson(), library.toJson().length())) {
+        qCritical("%s", QString("File %1 could not be written: %2!").arg(path).arg(libraryFile.errorString()).toUtf8().constData());
+        libraryFile.close();
+        return false;
+    }
+
+    libraryFile.close();
+
+    return true;
 }
 
 void LibraryHelperWindow::loadRecentLibraries()
