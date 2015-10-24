@@ -40,7 +40,7 @@ LibraryHelperWindow::LibraryHelperWindow(QWidget *parent) :
             return;
 
         qDebug() << "Successfully opened library" << libraryFilename;
-        emit librarySelected(library, libraryFilename);
+        this->openLibrary(library, libraryFilename);
     });
 
     connect(this->_ui->newButton, &QPushButton::clicked, [this]() {
@@ -56,7 +56,7 @@ LibraryHelperWindow::LibraryHelperWindow(QWidget *parent) :
             return;
 
         qDebug() << "Successfully created library" << libraryFilename;
-        emit librarySelected(library, libraryFilename);
+        this->openLibrary(library, libraryFilename);
     });
 
     connect(this->_ui->recentLibrariesTable, &QTableWidget::itemDoubleClicked, [this](QTableWidgetItem *item) {
@@ -73,16 +73,7 @@ LibraryHelperWindow::LibraryHelperWindow(QWidget *parent) :
             return;
 
         qDebug() << "Recent library loaded";
-        emit librarySelected(library, path);
-    });
-
-    connect(this, &LibraryHelperWindow::librarySelected, [this](QJsonObject library, QString libraryFilename) {
-        qDebug() << "Opening library" << libraryFilename;
-        this->addRecentLibrary(libraryFilename);
-
-        this->_mainWindow = new MainWindow(library, libraryFilename);
-        this->_mainWindow->show();
-        this->close();
+        this->openLibrary(library, path);
     });
 
     this->loadRecentLibraries();
@@ -107,6 +98,12 @@ QJsonObject LibraryHelperWindow::loadLibrary(QString path, bool *ok) const
     QFile libraryFile(path);
     if (!libraryFile.exists()) {
         qCritical("%s", QString("File %1 does not exist!").arg(path).toUtf8().constData());
+        return QJsonObject();
+    }
+
+    QFile libraryLockFile(path.append(".lock"));
+    if (libraryLockFile.exists()) {
+        qCritical("%s", QString("File %1 is locked by another user").arg(path).toUtf8().constData());
         return QJsonObject();
     }
 
@@ -160,6 +157,28 @@ bool LibraryHelperWindow::saveLibrary(QString path)
     }
 
     libraryFile.close();
+
+    return true;
+}
+
+bool LibraryHelperWindow::openLibrary(QJsonObject library, QString path)
+{
+    if (!this->_lockLibrary(path))
+        return false;
+
+    qDebug() << "Opening library" << path;
+    this->addRecentLibrary(path);
+
+    this->_mainWindow = new MainWindow(library, path);
+
+    connect(this->_mainWindow, &MainWindow::closing, [this](QJsonObject library, QString path) {
+        Q_UNUSED(library);
+
+        this->_unlockLibrary(path);
+    });
+
+    this->_mainWindow->show();
+    this->close();
 
     return true;
 }
@@ -238,4 +257,47 @@ void LibraryHelperWindow::addRecentLibrary(QString path)
         settings.setValue("path", this->_recentLibraries.at(i));
     }
     settings.endArray();
+}
+
+bool LibraryHelperWindow::_lockLibrary(QString path) const
+{
+    qDebug() << "Lock library" << path;
+
+    QString lockFileName = path.append(".lock");
+
+    QFile libraryLockFile(lockFileName);
+    if (libraryLockFile.exists()) {
+        qCritical("%s", QString("File %1 is already locked by another user!").arg(path).toUtf8().constData());
+        return false;
+    }
+
+    if (!libraryLockFile.open(QIODevice::WriteOnly)) {
+        qCritical("%s", QString("Could not open lock file: %1!").arg(lockFileName).toUtf8().constData());
+        return false;
+    }
+
+    libraryLockFile.write("");
+    libraryLockFile.close();
+
+    return true;
+}
+
+bool LibraryHelperWindow::_unlockLibrary(QString path) const
+{
+    qDebug() << "Unlock library" << path;
+
+    QString lockFileName = path.append(".lock");
+
+    QFile libraryLockFile(lockFileName);
+    if (!libraryLockFile.exists()) {
+        qCritical("%s", QString("File %1 is not locked by another user!").arg(path).toUtf8().constData());
+        return false;
+    }
+
+    if (!libraryLockFile.remove()) {
+        qCritical("%s", QString("File %1 lock could not be removed!").arg(lockFileName).toUtf8().constData());
+        return false;
+    }
+
+    return true;
 }

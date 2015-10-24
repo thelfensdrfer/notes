@@ -208,6 +208,8 @@ void MainWindow::closeEvent(QCloseEvent *event)
     this->saveTree();
     this->saveNotes();
 
+    emit closing(this->_library, this->_path);
+
     QMainWindow::closeEvent(event);
 }
 

@@ -90,6 +90,14 @@ private:
     QString _path;
     QTimer _saveTimer;
     QList<EditorColorScheme*> _colorSchemes;
+
+signals:
+    /**
+     * @brief Emitted before the window is closed
+     * @param library
+     * @param path
+     */
+    void closing(QJsonObject library, QString path);
 };
 
 #endif // MAINWINDOW_HPP

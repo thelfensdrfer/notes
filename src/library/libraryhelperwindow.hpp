@@ -43,6 +43,13 @@ protected:
     bool saveLibrary(QString path);
 
     /**
+     * @brief Open library and lock it
+     * @param library
+     * @param path
+     */
+    bool openLibrary(QJsonObject library, QString path);
+
+    /**
      * @brief Load recent libraries
      */
     void loadRecentLibraries();
@@ -58,13 +65,17 @@ private:
 
     QList<QString> _recentLibraries;
 
-signals:
     /**
-     * @brief Emitted when a library was selected
-     * @param library
+     * @brief Lock the library
      * @param path
      */
-    void librarySelected(QJsonObject library, QString path);
+    bool _lockLibrary(QString path) const;
+
+    /**
+     * @brief Unlock the library
+     * @param path
+     */
+    bool _unlockLibrary(QString path) const;
 };
 
 #endif // LIBRARYHELPERWINDOW_HPP
